@@ -1,0 +1,21 @@
+.header{
+    height: 120px;
+    background-color: gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 190px;
+}
+
+.div{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.pPrimeiro{
+    border: 2px solid black;
+    padding: 5px;
+    border-radius: 10%;
+    position: relative;
+}
