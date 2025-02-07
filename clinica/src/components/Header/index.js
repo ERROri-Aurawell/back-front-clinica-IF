@@ -32,7 +32,7 @@ export default () => {
                 <p className={styles.pPrimeiro} onMouseEnter={() => setDiv2(true)}>Pacientes</p>
 
                 {div2 && (<div className={styles.div}>
-                    <Link  href="/">Listar</Link>
+                    <Link  href="/pacienteListar">Listar</Link>
                     <Link  href="/">Adicionar</Link>
                     <Link  href="/">Editar</Link>
                     <Link  href="/">Excluir</Link>
@@ -43,7 +43,7 @@ export default () => {
                 <p className={styles.pPrimeiro} onMouseEnter={() => setDiv3(true)}>Agendamento</p>
 
                 {div3 && (<div className={styles.div}>
-                    <Link  href="/">Listar Consultas</Link>
+                    <Link  href="/consultas">Listar Consultas</Link>
                     <Link  href="/">Agendar Consultas</Link>
                     <Link  href="/">Editar Agendamento</Link>
                     <Link  href="/">Cancelar</Link>
