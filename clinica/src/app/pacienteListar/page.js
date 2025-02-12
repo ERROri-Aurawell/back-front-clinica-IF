@@ -1,56 +1,30 @@
 'use client'
 import Image from "next/image";
 import styles from "./pacienteListar.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
-export default () =>{
+export default () => {
 
-    const pacienteFake = [
-        {
-            id: 1,
-            nome: "aaa",
-            telefone: 1975,
-            email: "a@gmail",
-            cpf: "0000000000",
-        },
-        {
-            id: 2,
-            nome: "bbb",
-            telefone: 1980,
-            email: "b@gmail",
-            cpf: "9999999999",
-        },
-        {
-            id: 3,
-            nome: "ccc",
-            telefone: 1990,
-            email: "c@gmail",
-            cpf: "88888888888",
-        },
-        {
-            id: 4,
-            nome: "ddd",
-            telefone: 1975,
-            email: "d@gmail",
-            cpf: "666666666666",
-        },
-        {
-            id: 5,
-            nome: "eee",
-            telefone: 2200,
-            email: "e@gmail",
-            cpf: "444444444444",
-        },
+    const [paciente, setPaciente] = useState([])
 
-    ]
+    const getApi = async () => {
+        const conteudo = await fetch('https://api-clinica-2a.onrender.com/pacientes')
+        if (!conteudo.ok) {
+            throw new Error('Erro ao buscar:' + conteudo.statusText);
+        }
+        const data = await conteudo.json();
+        setPaciente(data)
+        console.log(paciente)
+    }
 
-    return(
+    useEffect(() => {
+        getApi();
+    }, [])
+
+    return (
         <section>
-            <div>
-                <p>paragráfo</p>
-
-
+            <div className={styles.divPrincipal}>
                 <table className={styles.table}>
                     <thead>
                         <tr>
@@ -62,15 +36,15 @@ export default () =>{
                         </tr>
                     </thead>
                     <tbody>
-                    {pacienteFake.map(medico =>(
-                        <tr key={medico.id}>
-                            <td className={styles.td}>{medico.id}</td>
-                            <td className={styles.td}>{medico.nome}</td>
-                            <td className={styles.td}>{medico.telefone}</td>
-                            <td className={styles.td}>{medico.email}</td>
-                            <td className={styles.td}>{medico.cpf}</td>
-                        </tr>
-                    ))}
+                        {paciente.map(medico => (
+                            <tr key={medico.id}>
+                                <td className={styles.td}>{medico.id}</td>
+                                <td className={styles.td}>{medico.nome}</td>
+                                <td className={styles.td}>{medico.telefone}</td>
+                                <td className={styles.td}>{medico.email}</td>
+                                <td className={styles.td}>{medico.cpf}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>

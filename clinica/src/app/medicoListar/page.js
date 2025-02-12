@@ -1,55 +1,69 @@
 'use client'
 import Image from "next/image";
 import styles from "./medicoListar.module.css";
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import Link from "next/link";
 
 export default () =>{
 
-    const medicosFake = [
-        {
-            id: 1,
-            nome: "aaa",
-            telefone: 1975,
-            email: "a@gmail",
-            espec: "sim",
-        },
-        {
-            id: 2,
-            nome: "bbb",
-            telefone: 1980,
-            email: "b@gmail",
-            espec: "não",
-        },
-        {
-            id: 3,
-            nome: "ccc",
-            telefone: 1990,
-            email: "c@gmail",
-            espec: "talvez",
-        },
-        {
-            id: 4,
-            nome: "ddd",
-            telefone: 1975,
-            email: "d@gmail",
-            espec: "se pá",
-        },
-        {
-            id: 5,
-            nome: "eee",
-            telefone: 2200,
-            email: "e@gmail",
-            espec: "creio que não",
-        },
-    ]
+
+    const [divCima, setDivCima] = useState(false)
+
+
+    const [medicos, setMedicos] = useState([])
+    const [procurar, setProcurar] = useState([])
+
+    const [letra, setLetra] = useState([])
+
+    const mudarLetra = (evento) => {
+        console.log(evento.target.value);
+        setLetra(evento.target.value);
+    }
+
+    function mudarDiv() {
+        setDivCima(!divCima)
+    }
+
+    const getApi = async () =>{
+        const conteudo = await fetch('https://api-clinica-2a.onrender.com/medicos')
+        if (!conteudo.ok) {
+            throw new Error('Erro ao buscar:' + conteudo.statusText);
+        }
+        const data = await conteudo.json();
+        setMedicos(data)
+        console.log(medicos)
+    }
+
+    const getProcurar = async (variavel) =>{
+        const conteudo = await fetch(`https://api-clinica-2a.onrender.com/medicos?nome=${variavel}`)
+        if (!conteudo.ok) {
+            throw new Error('Erro ao buscar:' + conteudo.statusText);
+        }
+        const data = await conteudo.json();
+        setProcurar(data)
+        console.log(procurar)
+    }
+
+    useEffect(() => {
+        getApi();
+    }, [])
 
     return(
-        <section>
-            <div>
-                <p>paragráfo</p>
+        <section className={styles.section}>
+            <button className={styles.button} onClick={mudarDiv}>Buscar médico</button>
 
+            {divCima && <div className={styles.vaiAparecer}>
+                <p>coisas</p>
+                <input type="text" onChange={mudarLetra} />
 
+                <ul>
+                    {procurar.map(especifico =>(
+                        <li key={especifico.id}>{especifico.nome}</li>
+                    ))}
+                </ul>
+            </div>}
+            
+                {!divCima &&<div className={styles.divPrincipal}>
                 <table className={styles.table}>
                     <thead>
                         <tr>
@@ -61,18 +75,18 @@ export default () =>{
                         </tr>
                     </thead>
                     <tbody>
-                    {medicosFake.map(medico =>(
+                    {medicos.map(medico =>(
                         <tr key={medico.id}>
                             <td className={styles.td}>{medico.id}</td>
                             <td className={styles.td}>{medico.nome}</td>
                             <td className={styles.td}>{medico.telefone}</td>
                             <td className={styles.td}>{medico.email}</td>
-                            <td className={styles.td}>{medico.espec}</td>
+                            <td className={styles.td}>{medico.especialidade}</td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
-            </div>
+            </div>}
         </section>
     )
 }
