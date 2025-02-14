@@ -14,14 +14,12 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    position: relative;
 }
 
 .vaiAparecer{
-    position: absolute;
     background-color: gray;
     width: 400px;
-    height: 400px;
+
 }
 
 .section{
@@ -31,4 +29,18 @@
     margin-top: 10px;
 }
 
+.divDoButton{
+    width: 100px;
+    height: 40px;
+}
 
+
+@media (min-width: 400px){
+    .table{
+        overflow: scroll;
+        position: relative;
+    }
+    .divPrincipal{
+        overflow-x: scroll;
+    }
+}

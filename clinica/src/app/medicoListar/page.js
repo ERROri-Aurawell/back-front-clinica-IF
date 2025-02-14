@@ -1,10 +1,10 @@
 'use client'
 import Image from "next/image";
 import styles from "./medicoListar.module.css";
-import { useState , useEffect} from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
-export default () =>{
+export default () => {
 
 
     const [divCima, setDivCima] = useState(false)
@@ -13,18 +13,24 @@ export default () =>{
     const [medicos, setMedicos] = useState([])
     const [procurar, setProcurar] = useState([])
 
-    const [letra, setLetra] = useState([])
+    let letra = "";
+    let saida = "";
 
     const mudarLetra = (evento) => {
-        console.log(evento.target.value);
-        setLetra(evento.target.value);
+        console.log(evento.target.value + " :Evento capturado");
+
+        letra = evento.target.value;
+        saida = letra.toLowerCase();
+        console.log(saida + " : letra armazenada");
+
+        getProcurar(saida)
     }
 
     function mudarDiv() {
         setDivCima(!divCima)
     }
 
-    const getApi = async () =>{
+    const getApi = async () => {
         const conteudo = await fetch('https://api-clinica-2a.onrender.com/medicos')
         if (!conteudo.ok) {
             throw new Error('Erro ao buscar:' + conteudo.statusText);
@@ -34,36 +40,42 @@ export default () =>{
         console.log(medicos)
     }
 
-    const getProcurar = async (variavel) =>{
+    const getProcurar = async (variavel) => {
+        console.log(variavel + ": Nome pesquisado")
         const conteudo = await fetch(`https://api-clinica-2a.onrender.com/medicos?nome=${variavel}`)
         if (!conteudo.ok) {
-            throw new Error('Erro ao buscar:' + conteudo.statusText);
+            console.log(new Error('Erro ao buscar:' + conteudo.statusText));
+            setProcurar(medicos)
+        } else {
+            const data = await conteudo.json();
+            setProcurar(data)
+            console.log(procurar)
         }
-        const data = await conteudo.json();
-        setProcurar(data)
-        console.log(procurar)
     }
 
     useEffect(() => {
         getApi();
     }, [])
 
-    return(
+    return (
         <section className={styles.section}>
-            <button className={styles.button} onClick={mudarDiv}>Buscar médico</button>
+            <div className={styles.divDoButton}>
+                <button className={styles.button} onClick={mudarDiv}>Buscar médico</button>
+            </div>
 
             {divCima && <div className={styles.vaiAparecer}>
-                <p>coisas</p>
+                <p>Procure por um médico</p>
                 <input type="text" onChange={mudarLetra} />
 
                 <ul>
-                    {procurar.map(especifico =>(
+                    {procurar.map(especifico => (
                         <li key={especifico.id}>{especifico.nome}</li>
                     ))}
                 </ul>
             </div>}
-            
-                {!divCima &&<div className={styles.divPrincipal}>
+
+
+            {!divCima && <div className={styles.divPrincipal}>
                 <table className={styles.table}>
                     <thead>
                         <tr>
@@ -75,15 +87,15 @@ export default () =>{
                         </tr>
                     </thead>
                     <tbody>
-                    {medicos.map(medico =>(
-                        <tr key={medico.id}>
-                            <td className={styles.td}>{medico.id}</td>
-                            <td className={styles.td}>{medico.nome}</td>
-                            <td className={styles.td}>{medico.telefone}</td>
-                            <td className={styles.td}>{medico.email}</td>
-                            <td className={styles.td}>{medico.especialidade}</td>
-                        </tr>
-                    ))}
+                        {medicos.map(medico => (
+                            <tr key={medico.id}>
+                                <td className={styles.td}>{medico.id}</td>
+                                <td className={styles.td}>{medico.nome}</td>
+                                <td className={styles.td}>{medico.telefone}</td>
+                                <td className={styles.td}>{medico.email}</td>
+                                <td className={styles.td}>{medico.especialidade}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>}
