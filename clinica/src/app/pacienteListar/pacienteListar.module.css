@@ -1,5 +1,7 @@
 .table{
     background-color: gray;
+    max-width: 1000px;
+    position: relative;
 }
 
 .th, .td{
@@ -11,6 +13,34 @@
 .divPrincipal{
     display: flex;
     align-items: center;
-    justify-content: center;
-    
+    flex-direction: column;
+}
+
+.vaiAparecer{
+    background-color: gray;
+    width: 400px;
+
+}
+
+.section{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.divDoButton{
+    width: 100px;
+    height: 40px;
+}
+
+
+@media (min-width: 400px){
+    .table{
+        overflow: scroll;
+        position: relative;
+    }
+    .divPrincipal{
+        overflow-x: scroll;
+    }
 }

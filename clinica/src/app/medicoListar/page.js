@@ -45,7 +45,7 @@ export default () => {
         const conteudo = await fetch(`https://api-clinica-2a.onrender.com/medicos?nome=${variavel}`)
         if (!conteudo.ok) {
             console.log(new Error('Erro ao buscar:' + conteudo.statusText));
-            setProcurar(medicos)
+            setProcurar([{id: "", nome: ""}])
         } else {
             const data = await conteudo.json();
             setProcurar(data)

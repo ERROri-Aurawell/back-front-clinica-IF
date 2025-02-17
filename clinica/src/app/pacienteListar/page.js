@@ -7,15 +7,48 @@ import Link from "next/link";
 export default () => {
 
     const [paciente, setPaciente] = useState([])
+    const [procurar, setProcurar] = useState([])
+
+    const [divCima, setDivCima] = useState(false)
+
+    let letra = "";
+    let saida = "";
 
     const getApi = async () => {
         const conteudo = await fetch('https://api-clinica-2a.onrender.com/pacientes')
         if (!conteudo.ok) {
-            throw new Error('Erro ao buscar:' + conteudo.statusText);
+            console.log( new Error('Erro ao buscar:' + conteudo.statusText));
         }
         const data = await conteudo.json();
         setPaciente(data)
         console.log(paciente)
+    }
+
+    const getProcurar = async (variavel) => {
+        console.log(variavel + ": Nome pesquisado")
+        const conteudo = await fetch(`https://api-clinica-2a.onrender.com/pacientes?nome=${variavel}`)
+        if (!conteudo.ok) {
+            console.log(new Error('Erro ao buscar:' + conteudo.statusText));
+            setProcurar([{id: "", nome: ""}])
+        } else {
+            const data = await conteudo.json();
+            setProcurar(data)
+            console.log(procurar)
+        }
+    }
+
+    const mudarLetra = (evento) => {
+        console.log(evento.target.value + " :Evento capturado");
+
+        letra = evento.target.value;
+        saida = letra.toLowerCase();
+        console.log(saida + " : letra armazenada");
+
+        getProcurar(saida)
+    }
+
+    function mudarDiv() {
+        setDivCima(!divCima)
     }
 
     useEffect(() => {
@@ -23,8 +56,12 @@ export default () => {
     }, [])
 
     return (
-        <section>
-            <div className={styles.divPrincipal}>
+        <section className={styles.section}>
+            <div className={styles.divDoButton}>
+                <button className={styles.button} onClick={mudarDiv}>Buscar paciente</button>
+            </div> 
+
+            {!divCima && <div className={styles.divPrincipal}>
                 <table className={styles.table}>
                     <thead>
                         <tr>
@@ -47,7 +84,17 @@ export default () => {
                         ))}
                     </tbody>
                 </table>
-            </div>
+            </div>}
+
+
+            {divCima &&<div className={styles.vaiAparecer}>
+                <p>Procure por um paciente</p>
+                <input type="text" onChange={mudarLetra} />
+                    {procurar.map(especifico => (
+                        <li key={especifico.id}>{especifico.nome}</li>
+                    ))}
+
+                </div>}
         </section>
     )
 }
